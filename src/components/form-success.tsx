@@ -13,7 +13,7 @@ export function FormSuccess({ message }: FormSuccessProps) {
   return (
     <Badge
       variant="default"
-      className="p-3 rounded-md flex items-center justify-center gap-x-2 text-sm bg-emerald-800 hover:bg-emerald-800/80"
+      className="p-3 rounded-md flex items-center justify-center gap-x-2 text-sm"
     >
       <CheckCircledIcon className="h-4 w-4" />
       <p>{message}</p>

@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
-import { Nunito } from 'next/font/google';
 
-import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
-import './globals.css';
 import { auth } from '@/auth/auth';
-
-const nunito = Nunito({ subsets: ['latin'] });
+import { fontSans } from '@/lib/fonts';
+import { cn } from '@/lib/utils';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Reservation Management',
@@ -27,7 +25,7 @@ export default async function RootLayout({
         <body
           className={cn(
             'min-h-screen bg-background font-sans antialiased',
-            nunito.className,
+            fontSans.variable,
           )}
         >
           <ThemeProvider

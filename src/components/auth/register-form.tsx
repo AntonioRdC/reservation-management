@@ -65,7 +65,7 @@ export function RegisterForm() {
             <AiOutlineHome className="mr-2" /> Página inicial
           </Button>
         </Link>
-        <Link href="/auth/register">
+        <Link href="/auth/login">
           <Button variant={'outline'} className="py-2 px-4 text-lg mt-4 mr-4">
             Fazer Login
           </Button>

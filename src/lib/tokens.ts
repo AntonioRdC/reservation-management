@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import { v4 as uuid } from 'uuid';
 
 import { db } from '@/lib/db';

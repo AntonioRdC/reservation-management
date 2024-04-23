@@ -51,6 +51,9 @@ export default function SettingsForm() {
   });
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+    setError('');
+    setSuccess('');
+
     startTransition(() => {
       settings(values)
         .then((data) => {
@@ -69,25 +72,6 @@ export default function SettingsForm() {
 
   return (
     <div className="w-[600px]">
-      <h2 className="text-xl font-bold my-4">Imagem de perfil</h2>
-      <Card className="bg-zinc-300 border-solid border-2 border-zinc-200 rounded-sm dark:bg-zinc-800 dark:border-zinc-700">
-        <CardContent className="flex justify-between p-6">
-          <Image
-            src={user?.image || 'https://github.com/shadcn.png'}
-            width={72}
-            height={72}
-            alt="Avatar"
-            className="rounded-full object-cover"
-          />
-          <div className="flex flex-col items-start justify-center">
-            <Button onClick={() => {}}>Alterar imagem de perfil</Button>
-            <p>
-              A imagem deve estar no formato JPEG, PNG ou GIF e não pode ter
-              mais do que 10 MB.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
       <h2 className="text-xl font-bold my-4">Configurações de perfil</h2>
       <Card className="bg-zinc-300 border-solid border-2 border-zinc-200 rounded-sm dark:bg-zinc-800 dark:border-zinc-700">
         <CardContent>

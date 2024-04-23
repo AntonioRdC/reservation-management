@@ -35,7 +35,9 @@ export function Hero() {
           <Link
             href="/"
             target="_blank"
-            className={`w-full md:w-1/3 ${buttonVariants()}`}
+            className={`w-full md:w-1/3 bg-emerald-500 ${buttonVariants({
+              variant: 'default',
+            })}`}
           >
             <AiOutlineWhatsApp className="ml-2 w-5 h-5" />
             Fale conosco pelo WhatsApp
@@ -44,9 +46,7 @@ export function Hero() {
           <Link
             href="/"
             target="_blank"
-            className={`w-full md:w-1/3 ${buttonVariants({
-              variant: 'outline',
-            })}`}
+            className={`w-full md:w-1/3 ${buttonVariants()}`}
           >
             <BiLogIn className="mr-2 w-5 h-5" />
             Quero criar minha conta

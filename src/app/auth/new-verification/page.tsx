@@ -1,7 +1,12 @@
+import { Metadata } from 'next';
+
 import { NewVerificationCard } from '@/components/auth/new-verification-card';
 
-const NewVerificationPage = () => {
-  return <NewVerificationCard />;
+export const metadata: Metadata = {
+  title: 'New Verification Email',
+  description: 'New Verification Email',
 };
 
-export default NewVerificationPage;
+export default function NewVerificationPage() {
+  return <NewVerificationCard />;
+}

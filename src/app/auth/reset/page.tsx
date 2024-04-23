@@ -1,7 +1,12 @@
+import { Metadata } from 'next';
+
 import { ResetForm } from '@/components/auth/reset-form';
 
-const ResetPage = () => {
-  return <ResetForm />;
+export const metadata: Metadata = {
+  title: 'Reset Password',
+  description: 'Reset Password',
 };
 
-export default ResetPage;
+export default function ResetPage() {
+  return <ResetForm />;
+}

@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 datasource db {
   provider  = "postgresql"
   url  	    = env("DATABASE_URL")
@@ -22,6 +21,7 @@ model User {
   password      String?
   role          UserRole @default(USER)
   accounts      Account[]
+  booking       Booking[]
 }
 
 model Account {
@@ -59,4 +59,38 @@ model PasswordResetToken {
   expires DateTime
 
   @@unique([email, token])
+}
+
+model Space {
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  type          SpaceType
+  capacity      Int
+  hourlyRate    Float?
+  dailyRate     Float?
+  bookings      Booking[]
+}
+
+enum SpaceType {
+  MEETING_ROOM
+  AUDITORIUM
+}
+
+model Booking {
+  id          String    @id @default(cuid())
+  spaceId     String
+  userId      String
+  startTime   DateTime
+  endTime     DateTime
+  status      BookingStatus @default(REQUESTED)
+
+  space       Space     @relation(fields: [spaceId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+enum BookingStatus {
+  REQUESTED
+  CONFIRMED
+  CANCELLED
 }
