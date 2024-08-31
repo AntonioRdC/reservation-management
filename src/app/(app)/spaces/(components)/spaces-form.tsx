@@ -5,6 +5,7 @@ import { Space } from '@prisma/client';
 
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
 import { CategorySelector } from '@/app/(app)/spaces/(components)/category-selector';
 import {
@@ -32,6 +33,13 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
   );
   const [selectedTimeRange, setSelectedTimeRange] =
     useState<string>('08:00 até 09:00');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedImage(event.target.files[0]);
+    }
+  };
 
   return (
     <Card className="container mt-8">
@@ -85,6 +93,26 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           />
 
           <p className="text-xs text-gray-600 mt-1">Descrição do horário</p>
+        </section>
+
+        {/* Upload de Imagem */}
+        <section className="mb-4">
+          <Label className="block text-base font-medium mb-1">Imagem</Label>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-full file:border-0
+            file:text-sm file:font-semibold
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100"
+          />
+          {selectedImage && (
+            <p className="text-xs text-gray-600 mt-1">Descrição da imagem</p>
+          )}
         </section>
       </CardContent>
     </Card>
