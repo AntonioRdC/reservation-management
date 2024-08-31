@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth/auth';
-import { fontSans } from '@/lib/fonts';
+import { fontMono } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import './globals.css';
 
@@ -25,7 +25,7 @@ export default async function RootLayout({
         <body
           className={cn(
             'min-h-screen font-sans antialiased',
-            fontSans.className,
+            fontMono.className,
           )}
         >
           <ThemeProvider

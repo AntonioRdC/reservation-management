@@ -5,9 +5,9 @@ import { Space } from '@prisma/client';
 
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
 import { CategorySelector } from '@/app/(app)/spaces/(components)/category-selector';
+import { ResourceSelector } from '@/app/(app)/spaces/(components)/resource-selector';
 import {
   Select,
   SelectContent,
@@ -23,6 +23,29 @@ const categoryType = {
   VIDEOS: 'Vídeos',
 };
 
+const mockResources = [
+  {
+    id: '1',
+    name: 'Projetor',
+    quantity: 10,
+  },
+  {
+    id: '2',
+    name: 'Pincel',
+    quantity: 20,
+  },
+  {
+    id: '3',
+    name: 'Computador',
+    quantity: 5,
+  },
+  {
+    id: '4',
+    name: 'Microfone',
+    quantity: 8,
+  },
+];
+
 interface SpacesFormProps {
   spaces: Space[];
 }
@@ -34,11 +57,18 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
   const [selectedTimeRange, setSelectedTimeRange] =
     useState<string>('08:00 até 09:00');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedResources, setSelectedResources] = useState<{
+    [key: string]: number;
+  }>({});
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedImage(event.target.files[0]);
     }
+  };
+
+  const handleResourcesChange = (resources: { [key: string]: number }) => {
+    setSelectedResources(resources);
   };
 
   return (
@@ -95,6 +125,18 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           <p className="text-xs text-gray-600 mt-1">Descrição do horário</p>
         </section>
 
+        {/* Recursos */}
+        <section className="mb-4">
+          <Label className="block text-base font-medium mb-1">Recursos</Label>
+
+          <ResourceSelector
+            resources={mockResources}
+            onResourcesChange={handleResourcesChange}
+          />
+
+          <p className="text-xs text-gray-600 mt-1">Descrição dos Recursos</p>
+        </section>
+
         {/* Upload de Imagem */}
         <section className="mb-4">
           <Label className="block text-base font-medium mb-1">Imagem</Label>
@@ -110,9 +152,8 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
             file:bg-blue-50 file:text-blue-700
             hover:file:bg-blue-100"
           />
-          {selectedImage && (
-            <p className="text-xs text-gray-600 mt-1">Descrição da imagem</p>
-          )}
+
+          <p className="text-xs text-gray-600 mt-1">Descrição da imagem</p>
         </section>
       </CardContent>
     </Card>
