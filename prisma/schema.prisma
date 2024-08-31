@@ -1,0 +1,117 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(USER)
+  accounts      Account[]
+  booking       Booking[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+// ...
+
+model Space {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  capacity    Int
+  bookings    Booking[]
+}
+
+model Resource {
+  id       String            @id @default(cuid())
+  name     String
+  quantity Int
+  bookings ResourceBooking[]
+}
+
+model Booking {
+  id        String            @id @default(cuid())
+  spaceId   String
+  userId    String
+  startTime DateTime
+  endTime   DateTime
+  image     String?
+  category  CategoryType
+  resources ResourceBooking[]
+  status    BookingStatus     @default(REQUESTED)
+
+  space Space @relation(fields: [spaceId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model ResourceBooking {
+  bookingId  String
+  resourceId String
+
+  booking  Booking  @relation(fields: [bookingId], references: [id])
+  resource Resource @relation(fields: [resourceId], references: [id])
+
+  @@id([bookingId, resourceId])
+}
+
+enum BookingStatus {
+  REQUESTED
+  CONFIRMED
+  CANCELLED
+}
+
+enum CategoryType {
+  PRESENTIAL_COURSE
+  ONLINE_COURSE
+  CONSULTANCY
+  VIDEOS
+}
