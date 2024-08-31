@@ -6,6 +6,7 @@ import { Space } from '@prisma/client';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
+import { CategorySelector } from '@/app/(app)/spaces/(components)/category-selector';
 import {
   Select,
   SelectContent,
@@ -13,6 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+
+const categoryType = {
+  PRESENTIAL_COURSE: 'Curso Presencial',
+  ONLINE_COURSE: 'Curso Online',
+  CONSULTANCY: 'Consultoria',
+  VIDEOS: 'Vídeos',
+};
 
 interface SpacesFormProps {
   spaces: Space[];
@@ -36,7 +44,7 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           </p>
         </section>
 
-        {/* Escolha de espaços */}
+        {/* Espaço */}
         <section className="mb-4">
           <Label className="block text-base font-medium mb-1">
             Tipos de espaço
@@ -60,7 +68,10 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           </p>
         </section>
 
-        {/* Escolha de data e horário */}
+        {/* Categoria do espaço */}
+        <CategorySelector categories={categoryType} />
+
+        {/* Data e horário */}
         <section className="mb-4">
           <Label className="block text-base font-medium mb-1">
             Horário do agendamento
