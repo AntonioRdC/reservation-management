@@ -5,6 +5,7 @@ import { Space } from '@prisma/client';
 
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
+import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
 import {
   Select,
   SelectContent,
@@ -12,17 +13,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
 
 interface SpacesFormProps {
   spaces: Space[];
 }
 
 export default function SpacesForm({ spaces }: SpacesFormProps) {
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
-  const [startTime, setStartTime] = useState<string>('08:00');
-  const [endTime, setEndTime] = useState<string>('22:00');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date(),
+  );
+  const [selectedTimeRange, setSelectedTimeRange] =
+    useState<string>('08:00 até 09:00');
 
   return (
     <Card className="container mt-8">
@@ -38,12 +39,12 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
         {/* Escolha de espaços */}
         <section className="mb-4">
           <Label className="block text-base font-medium mb-1">
-            Tipo de espaços
+            Tipos de espaço
           </Label>
 
           <Select>
             <SelectTrigger>
-              <SelectValue placeholder="Escolher um espaço" />
+              <SelectValue placeholder="Escolha um espaço" />
             </SelectTrigger>
             <SelectContent>
               {spaces.map((space) => (
@@ -54,42 +55,23 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
             </SelectContent>
           </Select>
 
-          <p className="text-xs text-gray-600 mt-1">Descrição do espaço</p>
+          <p className="text-xs text-gray-600 mt-1">
+            Descrição do espaço, capacidade
+          </p>
         </section>
 
-        {/* Escolha de horário */}
+        {/* Escolha de data e horário */}
         <section className="mb-4">
           <Label className="block text-base font-medium mb-1">
-            Horários de Agendamento
+            Horário do agendamento
           </Label>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Label className="block text-sm font-medium text-gray-700 mb-1">
-                Início
-              </Label>
-              <DateTimePicker
-                label="Fim"
-                selectedDate={endDate}
-                onSelectDate={setEndDate}
-                selectedTime={endTime}
-                onSelectTime={setEndTime}
-              />
-            </div>
-
-            <div className="flex-1">
-              <Label className="block text-sm font-medium text-gray-700 mb-1">
-                Fim
-              </Label>
-              <DateTimePicker
-                label="Fim"
-                selectedDate={endDate}
-                onSelectDate={setEndDate}
-                selectedTime={endTime}
-                onSelectTime={setEndTime}
-              />
-            </div>
-          </div>
+          <DateTimePicker
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            selectedTimeRange={selectedTimeRange}
+            onSelectTimeRange={setSelectedTimeRange}
+          />
 
           <p className="text-xs text-gray-600 mt-1">Descrição do horário</p>
         </section>

@@ -17,23 +17,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 interface DateTimePickerProps {
-  label: string;
   selectedDate: Date | undefined;
   onSelectDate: (date: Date | undefined) => void;
-  selectedTime: string;
-  onSelectTime: (time: string) => void;
+  selectedTimeRange: string;
+  onSelectTimeRange: (timeRange: string) => void;
 }
 
 export function DateTimePicker({
-  label,
   selectedDate,
   onSelectDate,
-  selectedTime,
-  onSelectTime,
+  selectedTimeRange,
+  onSelectTimeRange,
 }: DateTimePickerProps) {
   const formatDate = (date: Date | undefined) => {
     return date
@@ -41,17 +38,14 @@ export function DateTimePicker({
       : 'Escolha uma data';
   };
 
-  const timeOptions = Array.from({ length: 15 }, (_, i) => {
-    const hour = 8 + Math.floor(i / 2);
-    const minute = i % 2 === 0 ? '00' : '30';
-    return `${hour.toString().padStart(2, '0')}:${minute}`;
+  const timeRangeOptions = Array.from({ length: 14 }, (_, i) => {
+    const startHour = 8 + i;
+    const endHour = startHour + 1;
+    return `${startHour.toString().padStart(2, '0')}:00 até ${endHour.toString().padStart(2, '0')}:00`;
   });
 
   return (
     <div className="flex-1">
-      <Label className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </Label>
       <div className="flex gap-2">
         <Popover>
           <PopoverTrigger asChild>
@@ -78,14 +72,17 @@ export function DateTimePicker({
             />
           </PopoverContent>
         </Popover>
-        <Select onValueChange={onSelectTime} defaultValue={selectedTime}>
+        <Select
+          onValueChange={onSelectTimeRange}
+          defaultValue={selectedTimeRange}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Horário" />
           </SelectTrigger>
           <SelectContent>
-            {timeOptions.map((time) => (
-              <SelectItem key={time} value={time}>
-                {time}
+            {timeRangeOptions.map((timeRange) => (
+              <SelectItem key={timeRange} value={timeRange}>
+                {timeRange}
               </SelectItem>
             ))}
           </SelectContent>
