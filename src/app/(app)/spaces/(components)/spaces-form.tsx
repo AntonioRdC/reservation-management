@@ -107,7 +107,13 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
         </section>
 
         {/* Categoria do espaço */}
-        <CategorySelector categories={categoryType} />
+        <section className="mb-4">
+          <Label className="block text-base font-medium mb-1">Categoria</Label>
+
+          <CategorySelector categories={categoryType} />
+
+          <p className="text-xs text-gray-600 mt-1">Descrição do Categoria</p>
+        </section>
 
         {/* Data e horário */}
         <section className="mb-4">
