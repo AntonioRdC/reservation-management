@@ -57,7 +57,7 @@ export function ResourceSelector({
             id={`checkbox-${resource.id}`}
             checked={checkedResources[resource.id] || false}
             onCheckedChange={() => handleCheckboxChange(resource.id)}
-            className="mr-2 h-10 w-10"
+            className="mr-2 h-6 w-6"
           />
           <Label
             htmlFor={`checkbox-${resource.id}`}
@@ -75,7 +75,7 @@ export function ResourceSelector({
                 onChange={(e) =>
                   handleResourceChange(resource.id, Number(e.target.value))
                 }
-                className="w-16 h-10 p-1"
+                className="w-16 h-6 p-1"
               />
               <span className="ml-2 text-base text-gray-500">
                 / {resource.quantity} disponíveis

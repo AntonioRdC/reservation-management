@@ -17,7 +17,7 @@ export function CategorySelector({ categories }: CategorySelectorProps) {
     >
       {Object.entries(categories).map(([key, value]) => (
         <div key={key} className="flex items-center mb-2">
-          <RadioGroupItem value={key} id={key} className="h-10 w-10" />
+          <RadioGroupItem value={key} id={key} className="h-6 w-6" />
           <Label htmlFor={key} className="ml-2 font-normal">
             {value}
           </Label>

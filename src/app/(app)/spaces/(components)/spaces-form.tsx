@@ -6,6 +6,7 @@ import { Space } from '@prisma/client';
 import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
 import { CategorySelector } from '@/app/(app)/spaces/(components)/category-selector';
 import { ResourceSelector } from '@/app/(app)/spaces/(components)/resource-selector';
+import { ImageUploader } from '@/app/(app)/spaces/(components)/image-uploader';
 
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
@@ -62,12 +63,6 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
   const [selectedResources, setSelectedResources] = useState<{
     [key: string]: number;
   }>({});
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedImage(event.target.files[0]);
-    }
-  };
 
   const handleResourcesChange = (resources: { [key: string]: number }) => {
     setSelectedResources(resources);
@@ -155,21 +150,15 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
 
         {/* Upload de Imagem */}
         <section className="my-4">
-          <Label className="block text-base font-medium mb-1">Imagem</Label>
+          <Label htmlFor="picture" className="block text-base font-medium mb-1">
+            Imagem
+          </Label>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="block w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-full file:border-0
-            file:text-sm file:font-semibold
-            file:bg-blue-50 file:text-blue-700
-            hover:file:bg-blue-100"
-          />
+          <ImageUploader onImageChange={setSelectedImage} />
 
-          <p className="text-xs text-gray-600 mt-1">Descrição da imagem</p>
+          {selectedImage && (
+            <p className="text-xs text-gray-600 mt-1">{selectedImage.name}</p>
+          )}
         </section>
       </CardContent>
     </Card>
