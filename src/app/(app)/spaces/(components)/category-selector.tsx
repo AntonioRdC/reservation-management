@@ -10,10 +10,14 @@ export function CategorySelector({ categories }: CategorySelectorProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   return (
-    <RadioGroup value={selectedCategory} onValueChange={setSelectedCategory}>
+    <RadioGroup
+      value={selectedCategory}
+      onValueChange={setSelectedCategory}
+      className="space-y-2"
+    >
       {Object.entries(categories).map(([key, value]) => (
         <div key={key} className="flex items-center mb-2">
-          <RadioGroupItem value={key} id={key} />
+          <RadioGroupItem value={key} id={key} className="h-10 w-10" />
           <Label htmlFor={key} className="ml-2 font-normal">
             {value}
           </Label>

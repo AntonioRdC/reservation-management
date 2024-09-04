@@ -3,11 +3,13 @@
 import React, { useState } from 'react';
 import { Space } from '@prisma/client';
 
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
 import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
 import { CategorySelector } from '@/app/(app)/spaces/(components)/category-selector';
 import { ResourceSelector } from '@/app/(app)/spaces/(components)/resource-selector';
+
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -83,7 +85,7 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
         </section>
 
         {/* Espaço */}
-        <section className="mb-4">
+        <section className="my-4">
           <Label className="block text-base font-medium mb-1">
             Tipos de espaço
           </Label>
@@ -106,8 +108,10 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           </p>
         </section>
 
+        <Separator />
+
         {/* Categoria do espaço */}
-        <section className="mb-4">
+        <section className="my-4">
           <Label className="block text-base font-medium mb-1">Categoria</Label>
 
           <CategorySelector categories={categoryType} />
@@ -115,8 +119,10 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           <p className="text-xs text-gray-600 mt-1">Descrição do Categoria</p>
         </section>
 
+        <Separator />
+
         {/* Data e horário */}
-        <section className="mb-4">
+        <section className="my-4">
           <Label className="block text-base font-medium mb-1">
             Horário do agendamento
           </Label>
@@ -131,8 +137,10 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           <p className="text-xs text-gray-600 mt-1">Descrição do horário</p>
         </section>
 
+        <Separator />
+
         {/* Recursos */}
-        <section className="mb-4">
+        <section className="my-4">
           <Label className="block text-base font-medium mb-1">Recursos</Label>
 
           <ResourceSelector
@@ -143,8 +151,10 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           <p className="text-xs text-gray-600 mt-1">Descrição dos Recursos</p>
         </section>
 
+        <Separator />
+
         {/* Upload de Imagem */}
-        <section className="mb-4">
+        <section className="my-4">
           <Label className="block text-base font-medium mb-1">Imagem</Label>
 
           <input

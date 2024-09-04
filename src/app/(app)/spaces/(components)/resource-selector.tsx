@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input'; //
 
 interface Resource {
   id: string;
@@ -51,17 +53,21 @@ export function ResourceSelector({
     <>
       {resources.map((resource) => (
         <div key={resource.id} className="flex items-center mb-2">
-          <input
-            type="checkbox"
+          <Checkbox
             id={`checkbox-${resource.id}`}
             checked={checkedResources[resource.id] || false}
-            onChange={() => handleCheckboxChange(resource.id)}
-            className="mr-2"
+            onCheckedChange={() => handleCheckboxChange(resource.id)}
+            className="mr-2 h-10 w-10"
           />
-          <Label className="w-1/3 font-normal">{resource.name}</Label>
+          <Label
+            htmlFor={`checkbox-${resource.id}`}
+            className="w-1/3 font-normal"
+          >
+            {resource.name}
+          </Label>
           {checkedResources[resource.id] && (
             <>
-              <input
+              <Input
                 type="number"
                 min="0"
                 max={resource.quantity}
@@ -69,9 +75,9 @@ export function ResourceSelector({
                 onChange={(e) =>
                   handleResourceChange(resource.id, Number(e.target.value))
                 }
-                className="w-16 p-1 border border-gray-300 rounded"
+                className="w-16 h-10 p-1"
               />
-              <span className="ml-2 text-sm text-gray-500">
+              <span className="ml-2 text-base text-gray-500">
                 / {resource.quantity} disponíveis
               </span>
             </>
