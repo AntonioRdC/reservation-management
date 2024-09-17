@@ -1,7 +1,7 @@
-import { currentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
-import { MainNav } from '@/app/(app)/(components)/main-nav';
+import MainNav from '@/app/(app)/(components)/main-nav';
+import { currentUser } from '@/lib/auth';
 
 export default async function AppLayout({
   children,
@@ -16,7 +16,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <MainNav />
+      <MainNav user={user} />
       {children}
     </div>
   );

@@ -6,6 +6,7 @@ import {
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
+  adminRoutes,
 } from '@/auth/routes';
 
 const { auth } = NextAuth(authConfig);
@@ -13,8 +14,10 @@ const { auth } = NextAuth(authConfig);
 export default auth(async (req): Promise<any> => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+  const userRole = req.auth?.user.role;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isAdminRoute = adminRoutes.includes(nextUrl.pathname);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
@@ -27,6 +30,10 @@ export default auth(async (req): Promise<any> => {
     return null;
   }
 
+  if (isAdminRoute && (!isLoggedIn || userRole !== 'ADMIN')) {
+    return Response.redirect(new URL('/auth/login', nextUrl));
+  }
+
   if (!isPublicRoute && !isLoggedIn) {
     return Response.redirect(new URL('/auth/login', nextUrl));
   }
@@ -35,5 +42,5 @@ export default auth(async (req): Promise<any> => {
 });
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ['/admin', '/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
