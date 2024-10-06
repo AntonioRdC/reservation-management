@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { currentUser } from '@/lib/auth';
+import { AsideNav } from '@/app/(app)/admin/(components)/aside-nav';
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -15,5 +16,9 @@ export default async function AdminPage() {
     redirect('/dashboard');
   }
 
-  return <></>;
+  return (
+    <div>
+      <AsideNav />
+    </div>
+  );
 }
