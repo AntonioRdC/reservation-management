@@ -20,23 +20,28 @@ model User {
   image         String?
   password      String?
   role          UserRole  @default(USER)
-  accounts      Account[]
-  booking       Booking[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  booking  Booking[]
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String   @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?  @db.Text
   session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -64,30 +69,39 @@ model PasswordResetToken {
 // ...
 
 model Space {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
   capacity    Int
-  bookings    Booking[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings Booking[]
 }
 
 model Resource {
-  id       String            @id @default(cuid())
-  name     String
-  quantity Int
+  id        String   @id @default(cuid())
+  name      String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   bookings ResourceBooking[]
 }
 
 model Booking {
-  id        String            @id @default(cuid())
+  id        String        @id @default(cuid())
   spaceId   String
   userId    String
   startTime DateTime
   endTime   DateTime
   image     String?
   category  CategoryType
+  status    BookingStatus @default(REQUESTED)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
   resources ResourceBooking[]
-  status    BookingStatus     @default(REQUESTED)
 
   space Space @relation(fields: [spaceId], references: [id])
   user  User  @relation(fields: [userId], references: [id])
@@ -96,6 +110,8 @@ model Booking {
 model ResourceBooking {
   bookingId  String
   resourceId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   booking  Booking  @relation(fields: [bookingId], references: [id])
   resource Resource @relation(fields: [resourceId], references: [id])

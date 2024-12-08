@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Separator } from '@/components/ui/separator';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -143,15 +144,41 @@ export default function DataTable({ data }: DataTableProps) {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  const commercialHours = [
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+  ];
+
+  const offsetInMinutes = new Date().getTimezoneOffset();
+  const offsetHours = Math.abs(Math.floor(offsetInMinutes / 60));
+  const gmtString =
+    `gmt${offsetInMinutes > 0 ? '-' : '+'}${offsetHours.toString().padStart(2, '0')}`.toUpperCase();
+
   return (
     <div className="flex w-full m-auto px-4 mt-8 gap-4">
-      <div className="flex">
+      <div className="flex flex-col">
         <Calendar
           mode="single"
           selected={date}
           onSelect={setDate}
           className="rounded-md border"
         />
+        <div className="w-full mx-auto mt-1 overflow-hidden">
+          {gmtString}
+          {commercialHours.map((hour) => (
+            <div key={hour} className="flex h-16 items-center">
+              {hour}
+              <Separator orientation="vertical" className="ml-2" />
+              <Separator />
+            </div>
+          ))}
+        </div>
       </div>
       <div className="flex-auto">
         <div className="border">
