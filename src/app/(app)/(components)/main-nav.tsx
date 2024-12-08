@@ -26,7 +26,7 @@ const routeList: RouteProps[] = [
     label: 'Reservar Espaços',
   },
   {
-    href: '/events',
+    href: '/dashboard',
     label: 'Eventos',
   },
 ];

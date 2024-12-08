@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input'; //
+import { Input } from '@/components/ui/input';
 
 interface Resource {
   id: string;

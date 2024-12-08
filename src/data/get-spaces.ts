@@ -9,3 +9,13 @@ export const getAllSpaces = async () => {
     return null;
   }
 };
+
+export const getSpaceById = async (id: string) => {
+  try {
+    const space = await db.space.findUnique({ where: { id } });
+
+    return space;
+  } catch {
+    return null;
+  }
+};
