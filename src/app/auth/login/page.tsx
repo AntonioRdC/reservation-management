@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { LoginForm } from '@/app/auth/login/(components)/login-form';
+import { LoginForm } from '@/components/auth/login/login-form';
 
 export const metadata: Metadata = {
   title: 'Fazer Login',

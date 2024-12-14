@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { NewVerificationCard } from '@/app/auth/new-verification/(components)/new-verification-card';
+import { NewVerificationCard } from '@/components/auth/new-verification/new-verification-card';
 
 export const metadata: Metadata = {
   title: 'New Verification Email',
