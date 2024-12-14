@@ -1,4 +1,4 @@
-import { Auth } from '@/app/auth/(components)/Auth';
+import { Auth } from '@/components/auth/Auth';
 
 export default async function AuthLayout({
   children,

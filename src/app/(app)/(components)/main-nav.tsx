@@ -25,10 +25,6 @@ const routeList: RouteProps[] = [
     href: '/spaces',
     label: 'Reservar Espaços',
   },
-  {
-    href: '/dashboard',
-    label: 'Eventos',
-  },
 ];
 
 export default function MainNav({ user }: MainNavProps) {

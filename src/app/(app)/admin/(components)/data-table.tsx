@@ -6,11 +6,16 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  ColumnFiltersState,
+  getFilteredRowModel,
   getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { ArrowUpDown } from 'lucide-react';
 
 import {
   Table,
@@ -23,6 +28,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,7 +76,18 @@ export const columns: ColumnDef<Data>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+
     cell: ({ getValue }) => {
       const value = getValue<string>();
       return statusTranslations[value] || value;
@@ -90,7 +107,17 @@ export const columns: ColumnDef<Data>[] = [
   },
   {
     accessorKey: 'timeRange',
-    header: 'Período',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Período do agendamento
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const startTime = row.original.startTime;
       const endTime = row.original.endTime;
@@ -106,6 +133,12 @@ export const columns: ColumnDef<Data>[] = [
 
       return `${formattedStart} - ${formattedEnd}`;
     },
+    sortingFn: (rowA, rowB) => {
+      const startTimeA = new Date(rowA.original.startTime);
+      const startTimeB = new Date(rowB.original.startTime);
+
+      return startTimeA.getTime() - startTimeB.getTime();
+    },
   },
   {
     id: 'actions',
@@ -114,6 +147,7 @@ export const columns: ColumnDef<Data>[] = [
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir ações</span>
             <GiHamburgerMenu />
           </Button>
         </DropdownMenuTrigger>
@@ -136,15 +170,28 @@ interface DataTableProps {
 
 export default function DataTable({ data }: DataTableProps) {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  );
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      columnFilters,
+      sorting,
+    },
   });
 
   const commercialHours = [
+    '08:00',
     '09:00',
     '10:00',
     '11:00',
@@ -153,6 +200,7 @@ export default function DataTable({ data }: DataTableProps) {
     '14:00',
     '15:00',
     '16:00',
+    '17:00',
   ];
 
   const offsetInMinutes = new Date().getTimezoneOffset();
@@ -167,12 +215,12 @@ export default function DataTable({ data }: DataTableProps) {
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="rounded-md border"
+          className="border border-b-0"
         />
-        <div className="w-full mx-auto mt-1 overflow-hidden">
-          {gmtString}
+        <div className="w-full mx-auto overflow-hidden border border-t-0">
+          <p className="flex justify-center text-sm font-medium">{gmtString}</p>
           {commercialHours.map((hour) => (
-            <div key={hour} className="flex h-16 items-center">
+            <div key={hour} className="flex items-center">
               {hour}
               <Separator orientation="vertical" className="ml-2" />
               <Separator />
@@ -182,6 +230,18 @@ export default function DataTable({ data }: DataTableProps) {
       </div>
       <div className="flex-auto">
         <div className="border">
+          <div className="flex items-center py-4 mx-4">
+            <Input
+              placeholder="Filtrar por email"
+              value={
+                (table.getColumn('email')?.getFilterValue() as string) ?? ''
+              }
+              onChange={(event) =>
+                table.getColumn('email')?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          </div>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

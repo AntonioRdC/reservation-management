@@ -1,19 +1,17 @@
-import { FAQ } from '@/app/(components)/faq';
-import { Features } from '@/app/(components)/features';
-import { Footer } from '@/app/(components)/footer';
-import { Hero } from '@/app/(components)/hero';
-import { MainNav } from '@/app/(components)/main-nav';
-import { News } from '@/app/(components)/news';
+import { FAQ } from '@/components/home/faq';
+import { Features } from '@/components/home/features';
+import { Footer } from '@/components/home/footer';
+import { Hero } from '@/components/home/hero';
+import { Header } from '@/components/home/header';
 
 export default function RootPage() {
   return (
-    <>
-      <MainNav />
+    <main className="border-border/40 dark:border-border min-[1800px]:border-x">
+      <Header />
       <Hero />
-      <News />
       <Features />
       <FAQ />
       <Footer />
-    </>
+    </main>
   );
 }
