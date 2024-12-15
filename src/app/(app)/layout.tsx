@@ -15,9 +15,9 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <main className="flex items-center md:h-screen mx-auto">
       <MainNav user={user} />
       {children}
-    </div>
+    </main>
   );
 }

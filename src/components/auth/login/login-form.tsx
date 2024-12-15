@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/form';
 import { FormError } from '@/components/form-error';
 import { FormSuccess } from '@/components/form-success';
-import { login } from '@/actions/login';
+import { login } from '@/app/auth/login/service/login';
 import { DEFAULT_LOGIN_REDIRECT } from '@/auth/routes';
 
 export function LoginForm() {
@@ -81,16 +81,16 @@ export function LoginForm() {
 
   return (
     <div>
-      <Card className="flex flex-wrap w-[1080px] h-[400px] bg-zinc-900 p-4">
-        <CardHeader className="w-1/2">
-          <CardTitle className="text-5xl font-semibold tracking-tight">
+      <Card className="flex flex-wrap flex-col md:flex-row lg:min-w-[1040px] lg:h-[500px] w-full max-w-[1080px] h-auto bg-zinc-900 p-4">
+        <CardHeader className="w-full md:w-1/2 mb-4 md:mb-0">
+          <CardTitle className="text-3xl md:text-5xl font-semibold tracking-tight">
             Fazer Login
           </CardTitle>
           <CardDescription className="text-base font-semibold">
             Insira seu e-mail e senha abaixo para fazer login na sua conta
           </CardDescription>
         </CardHeader>
-        <CardContent className="w-1/2">
+        <CardContent className="w-full md:w-1/2">
           <div className="grid gap-6">
             <Form {...form}>
               <form
@@ -145,7 +145,7 @@ export function LoginForm() {
                 </div>
                 <FormError message={error || urlError} />
                 <FormSuccess message={success} />
-                <div className="flex gap-2">
+                <div className="flex flex-col md:flex-row gap-2">
                   <Link href="/auth/register" className="flex-1">
                     <Button variant="secondary" className="w-full">
                       Criar conta
@@ -179,7 +179,7 @@ export function LoginForm() {
             >
               <FaGoogle className="mr-2 h-4 w-4" />
               Google
-            </Button>{' '}
+            </Button>
           </div>
         </CardContent>
       </Card>
