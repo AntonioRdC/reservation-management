@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { Space } from '@prisma/client';
 
-import { DateTimePicker } from '@/app/(app)/spaces/(components)/date-time-picker';
-import { CategorySelector } from '@/app/(app)/spaces/(components)/category-selector';
-import { ResourceSelector } from '@/app/(app)/spaces/(components)/resource-selector';
-import { ImageUploader } from '@/app/(app)/spaces/(components)/image-uploader';
+import { DateTimePicker } from '@/components/date-time-picker';
+import { CategorySelector } from '@/components/category-selector';
+import { ResourceSelector } from '@/components/resource-selector';
+import { ImageUploader } from '@/components/image-uploader';
 
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';

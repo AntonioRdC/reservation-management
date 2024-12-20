@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import MainNav from '@/app/(app)/(components)/main-nav';
+import Header from '@/components/app-header';
 import { currentUser } from '@/lib/auth';
 
 export default async function AppLayout({
@@ -15,8 +15,8 @@ export default async function AppLayout({
   }
 
   return (
-    <main className="flex items-center md:h-screen mx-auto">
-      <MainNav user={user} />
+    <main className="h-screen border-border/40 dark:border-border min-[1800px]:border-x">
+      <Header user={user} />
       {children}
     </main>
   );

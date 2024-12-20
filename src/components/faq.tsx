@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { SeparatorComponents } from '@/components/separator-components';
 
 interface FAQProps {
   question: string;
@@ -30,7 +29,7 @@ const FAQList: FAQProps[] = [
 
 export function FAQ() {
   return (
-    <section id="faq" className="py-6 px-4">
+    <section id="faq" className="p-4">
       <p className="mb-4">Perguntas frequentes</p>
 
       <Accordion type="single" collapsible className="w-full AccordionRoot">

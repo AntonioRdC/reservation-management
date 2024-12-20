@@ -5,6 +5,7 @@ import Link from 'next/link';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ResetFormSchema } from '@/schemas/reset-password-form.schema';
+import { NewPasswordFormSchema } from '@/schemas/new-password-form.schema';
 import {
   Form,
   FormControl,
@@ -26,26 +27,29 @@ import {
 } from '@/components/ui/form';
 import { FormError } from '@/components/form-error';
 import { FormSuccess } from '@/components/form-success';
-import { reset } from '@/app/auth/reset/service/reset';
+import { newPassword } from '@/actions/new-password';
 
-export function ResetForm() {
+export function NewPasswordForm() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
+
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof ResetFormSchema>>({
-    resolver: zodResolver(ResetFormSchema),
+  const form = useForm<z.infer<typeof NewPasswordFormSchema>>({
+    resolver: zodResolver(NewPasswordFormSchema),
     defaultValues: {
-      email: '',
+      password: '',
     },
   });
 
-  const onSubmit = (values: z.infer<typeof ResetFormSchema>) => {
+  const onSubmit = (values: z.infer<typeof NewPasswordFormSchema>) => {
     setError('');
     setSuccess('');
 
     startTransition(() => {
-      reset(values).then((data) => {
+      newPassword(values, token).then((data) => {
         setError(data?.error);
         setSuccess(data?.success);
       });
@@ -56,19 +60,17 @@ export function ResetForm() {
     <div>
       <Card className="flex flex-wrap flex-col md:flex-row lg:min-w-[1040px] lg:h-[500px] w-full max-w-[1080px] h-auto bg-zinc-900 p-4">
         <CardHeader className="h-full md:w-1/2 mb-4 md:mb-0 flex flex-col justify-between">
-          <div className="flex flex-col space-y-1.5">
-            <CardTitle className="text-3xl md:text-5xl font-semibold tracking-tight">
-              Esqueceu sua senha?
-            </CardTitle>
-            <CardDescription className="text-base font-semibold">
-              Insira seu email
-            </CardDescription>
-          </div>
+          <CardTitle className="text-3xl md:text-5xl font-semibold tracking-tight">
+            Nova Senha
+          </CardTitle>
+          <CardDescription className="text-base font-semibold">
+            Insira sua nova senha
+          </CardDescription>
           <Button variant="secondary" className="text-lg mt-4">
             <Link href="/auth/login">Voltar ao login</Link>
           </Button>
         </CardHeader>
-        <CardContent>
+        <CardContent className="w-full md:w-1/2">
           <div className="grid gap-6">
             <Form {...form}>
               <form
@@ -78,16 +80,16 @@ export function ResetForm() {
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={isPending}
-                            placeholder="john.doe@example.com"
-                            type="email"
+                            placeholder="******"
+                            type="password"
                           />
                         </FormControl>
                         <FormMessage />
@@ -98,13 +100,13 @@ export function ResetForm() {
                 <FormError message={error} />
                 <FormSuccess message={success} />
                 <Button disabled={isPending} type="submit" className="w-full">
-                  Enviar Email de reset
+                  Atualizar senha
                 </Button>
               </form>
             </Form>
           </div>
         </CardContent>
-      </Card>{' '}
+      </Card>
       <p className="pt-4 text-center text-sm text-muted-foreground">
         <Link
           href="/terms"

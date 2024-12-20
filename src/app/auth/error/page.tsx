@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { ErrorCard } from '@/components/auth/error/error-card';
+import { ErrorCard } from '@/components/error-card';
 
 export const metadata: Metadata = {
   title: 'Error Auth',

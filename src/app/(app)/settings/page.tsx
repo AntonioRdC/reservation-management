@@ -1,4 +1,4 @@
-import SettingsForm from '@/app/(app)/settings/(components)/settings-form';
+import SettingsForm from '@/components/settings-form';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

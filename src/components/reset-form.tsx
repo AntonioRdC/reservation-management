@@ -5,7 +5,6 @@ import Link from 'next/link';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { NewPasswordFormSchema } from '@/schemas/new-password-form.schema';
+import { ResetFormSchema } from '@/schemas/reset-password-form.schema';
 import {
   Form,
   FormControl,
@@ -27,29 +26,26 @@ import {
 } from '@/components/ui/form';
 import { FormError } from '@/components/form-error';
 import { FormSuccess } from '@/components/form-success';
-import { newPassword } from '@/app/auth/new-password/service/new-password';
+import { reset } from '@/actions/reset';
 
-export function NewPasswordForm() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
-
+export function ResetForm() {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof NewPasswordFormSchema>>({
-    resolver: zodResolver(NewPasswordFormSchema),
+  const form = useForm<z.infer<typeof ResetFormSchema>>({
+    resolver: zodResolver(ResetFormSchema),
     defaultValues: {
-      password: '',
+      email: '',
     },
   });
 
-  const onSubmit = (values: z.infer<typeof NewPasswordFormSchema>) => {
+  const onSubmit = (values: z.infer<typeof ResetFormSchema>) => {
     setError('');
     setSuccess('');
 
     startTransition(() => {
-      newPassword(values, token).then((data) => {
+      reset(values).then((data) => {
         setError(data?.error);
         setSuccess(data?.success);
       });
@@ -60,17 +56,19 @@ export function NewPasswordForm() {
     <div>
       <Card className="flex flex-wrap flex-col md:flex-row lg:min-w-[1040px] lg:h-[500px] w-full max-w-[1080px] h-auto bg-zinc-900 p-4">
         <CardHeader className="h-full md:w-1/2 mb-4 md:mb-0 flex flex-col justify-between">
-          <CardTitle className="text-3xl md:text-5xl font-semibold tracking-tight">
-            Nova Senha
-          </CardTitle>
-          <CardDescription className="text-base font-semibold">
-            Insira sua nova senha
-          </CardDescription>
+          <div className="flex flex-col space-y-1.5">
+            <CardTitle className="text-3xl md:text-5xl font-semibold tracking-tight">
+              Esqueceu sua senha?
+            </CardTitle>
+            <CardDescription className="text-base font-semibold">
+              Insira seu email
+            </CardDescription>
+          </div>
           <Button variant="secondary" className="text-lg mt-4">
             <Link href="/auth/login">Voltar ao login</Link>
           </Button>
         </CardHeader>
-        <CardContent className="w-full md:w-1/2">
+        <CardContent>
           <div className="grid gap-6">
             <Form {...form}>
               <form
@@ -80,16 +78,16 @@ export function NewPasswordForm() {
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="password"
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={isPending}
-                            placeholder="******"
-                            type="password"
+                            placeholder="john.doe@example.com"
+                            type="email"
                           />
                         </FormControl>
                         <FormMessage />
@@ -100,13 +98,13 @@ export function NewPasswordForm() {
                 <FormError message={error} />
                 <FormSuccess message={success} />
                 <Button disabled={isPending} type="submit" className="w-full">
-                  Atualizar senha
+                  Enviar Email de reset
                 </Button>
               </form>
             </Form>
           </div>
         </CardContent>
-      </Card>
+      </Card>{' '}
       <p className="pt-4 text-center text-sm text-muted-foreground">
         <Link
           href="/terms"

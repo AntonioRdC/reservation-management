@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
-import { MainNav } from '@/components/home/main-nav';
-import { MobileNav } from '@/components/home/mobile-nav';
+import { MainNav } from '@/components/main-nav';
+import { MobileNav } from '@/components/mobile-nav';
 
 export function Header() {
   return (

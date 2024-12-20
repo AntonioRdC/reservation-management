@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 export function Hero() {
   return (
-    <section className="py-6 px-4">
+    <section className="p-4">
       <div className="flex flex-col justify-center items-center space-y-4">
         <div className="flex flex-col justify-center items-center text-4xl md:text-5xl lg:text-6xl font-bold">
           <h1 className="flex justify-center items-center">

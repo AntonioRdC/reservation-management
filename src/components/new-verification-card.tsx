@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { newVerification } from '@/app/auth/new-verification/service/new-verification';
+import { newVerification } from '@/actions/new-verification';
 import { FormSuccess } from '@/components/form-success';
 import { FormError } from '@/components/form-error';
 

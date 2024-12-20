@@ -38,7 +38,7 @@ export function UserNav() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 mt-2" align="end">
+      <DropdownMenuContent className="w-full mt-2" align="end">
         <DropdownMenuLabel className="font-normal">
           <p className="text-sm font-medium leading-none">{user?.name}</p>
         </DropdownMenuLabel>

@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/form';
 import { FormError } from '@/components/form-error';
 import { FormSuccess } from '@/components/form-success';
-import { login } from '@/app/auth/login/service/login';
+import { login } from '@/actions/login';
 import { DEFAULT_LOGIN_REDIRECT } from '@/auth/routes';
 
 export function LoginForm() {

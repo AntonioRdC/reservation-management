@@ -47,7 +47,7 @@ export function Features() {
     <>
       <section
         id="features"
-        className="flex flex-col justify-center items-center py-6 px-4 gap-4 border-y border-border/40 dark:border-border"
+        className="flex flex-col justify-center items-center p-4 gap-4 border-y border-border/40 dark:border-border"
       >
         <div className="flex justify-center items-center text-3xl md:text-4xl lg:text-5xl font-bold">
           <h1>

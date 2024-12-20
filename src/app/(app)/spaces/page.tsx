@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import SpacesForm from '@/app/(app)/spaces/(components)/spaces-form';
+import SpacesForm from '@/components/spaces-form';
 import { getAllSpaces } from '@/data/get-spaces';
 import { redirect } from 'next/navigation';
 

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { NewPasswordForm } from '@/components/auth/new-password/new-password-form';
+import { NewPasswordForm } from '@/components/new-password-form';
 
 export const metadata: Metadata = {
   title: 'New Password',

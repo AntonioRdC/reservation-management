@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { currentUser } from '@/lib/auth';
-import DataTable from '@/app/(app)/admin/(components)/data-table';
+import DataTable from '@/components/admin-data-table';
 import { getAllBooking } from '@/data/booking';
 import { getUserById } from '@/data/user';
 import { getSpaceById } from '@/data/get-spaces';

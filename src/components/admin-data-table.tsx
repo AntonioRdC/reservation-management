@@ -26,8 +26,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -169,7 +167,6 @@ interface DataTableProps {
 }
 
 export default function DataTable({ data }: DataTableProps) {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -190,44 +187,8 @@ export default function DataTable({ data }: DataTableProps) {
     },
   });
 
-  const commercialHours = [
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-  ];
-
-  const offsetInMinutes = new Date().getTimezoneOffset();
-  const offsetHours = Math.abs(Math.floor(offsetInMinutes / 60));
-  const gmtString =
-    `gmt${offsetInMinutes > 0 ? '-' : '+'}${offsetHours.toString().padStart(2, '0')}`.toUpperCase();
-
   return (
     <div className="flex w-full m-auto px-4 mt-8 gap-4">
-      <div className="flex flex-col">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="border border-b-0"
-        />
-        <div className="w-full mx-auto overflow-hidden border border-t-0">
-          <p className="flex justify-center text-sm font-medium">{gmtString}</p>
-          {commercialHours.map((hour) => (
-            <div key={hour} className="flex items-center">
-              {hour}
-              <Separator orientation="vertical" className="ml-2" />
-              <Separator />
-            </div>
-          ))}
-        </div>
-      </div>
       <div className="flex-auto">
         <div className="border">
           <div className="flex items-center py-4 mx-4">
