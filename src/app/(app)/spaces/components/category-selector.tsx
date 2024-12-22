@@ -4,15 +4,19 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface CategorySelectorProps {
   categories: { [key: string]: string };
+  selectedCategory: string;
+  onSelectedCategory: (category: string) => void;
 }
 
-export function CategorySelector({ categories }: CategorySelectorProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-
+export function CategorySelector({
+  categories,
+  selectedCategory,
+  onSelectedCategory,
+}: CategorySelectorProps) {
   return (
     <RadioGroup
       value={selectedCategory}
-      onValueChange={setSelectedCategory}
+      onValueChange={onSelectedCategory}
       className="space-y-2"
     >
       {Object.entries(categories).map(([key, value]) => (

@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
-import SpacesForm from '@/components/spaces-form';
-import { getAllSpaces } from '@/data/get-spaces';
-import { redirect } from 'next/navigation';
+
+import SpacesForm from '@/app/(app)/spaces/components/spaces-form';
+import { getAllSpaces } from '@/data/space';
+import { getAllResources } from '@/data/resource';
 
 export const metadata: Metadata = {
   title: 'Spaces',
@@ -10,8 +11,14 @@ export const metadata: Metadata = {
 
 export default async function SpacesPage() {
   const spaces = await getAllSpaces();
+  const resources = await getAllResources();
 
-  if (spaces === null) redirect('/dashboard');
-
-  return <SpacesForm spaces={spaces} />;
+  return (
+    <div className="container">
+      <h2 className="text-3xl font-semibold flex items-center justify-center py-8">
+        Faça sua reserva
+      </h2>
+      <SpacesForm spaces={spaces!} resources={resources!} />
+    </div>
+  );
 }

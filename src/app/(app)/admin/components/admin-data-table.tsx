@@ -89,7 +89,7 @@ export default function DataTable({ data: initialData }: DataTableProps) {
   };
 
   return (
-    <div className="flex max-h-screen w-full m-auto px-4 mt-8 gap-4">
+    <div className="flex max-h-screen w-full m-auto gap-4">
       <div className="flex-auto">
         <div className="border dark:bg-zinc-900">
           <div className="flex items-center py-4 mx-4">

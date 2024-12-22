@@ -1,15 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Space } from '@prisma/client';
+import React, { useState, useTransition } from 'react';
+import { Resource, Space } from '@prisma/client';
 
-import { DateTimePicker } from '@/components/date-time-picker';
-import { CategorySelector } from '@/components/category-selector';
-import { ResourceSelector } from '@/components/resource-selector';
-import { ImageUploader } from '@/components/image-uploader';
+import { DateTimePicker } from '@/app/(app)/spaces/components/date-time-picker';
+import { CategorySelector } from '@/app/(app)/spaces/components/category-selector';
+import { ResourceSelector } from '@/app/(app)/spaces/components/resource-selector';
+import { ImageUploader } from '@/app/(app)/spaces/components/image-uploader';
+import { categoryType } from '@/app/(app)/spaces/docs';
 
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
   Select,
@@ -18,74 +19,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-const categoryType = {
-  PRESENTIAL_COURSE: 'Curso Presencial',
-  ONLINE_COURSE: 'Curso Online',
-  CONSULTANCY: 'Consultoria',
-  VIDEOS: 'Vídeos',
-};
-
-const mockResources = [
-  {
-    id: '1',
-    name: 'Projetor',
-    quantity: 10,
-  },
-  {
-    id: '2',
-    name: 'Pincel',
-    quantity: 20,
-  },
-  {
-    id: '3',
-    name: 'Computador',
-    quantity: 5,
-  },
-  {
-    id: '4',
-    name: 'Microfone',
-    quantity: 8,
-  },
-];
+import { Button } from '@/components/ui/button';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
 
 interface SpacesFormProps {
   spaces: Space[];
+  resources: Resource[];
 }
 
-export default function SpacesForm({ spaces }: SpacesFormProps) {
+export default function SpacesForm({ spaces, resources }: SpacesFormProps) {
+  const [error, setError] = useState<string | undefined>('');
+  const [success, setSuccess] = useState<string | undefined>('');
+  const [isPending, startTransition] = useTransition();
+
+  const [selectedSpace, setselectedSpace] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(),
   );
-  const [selectedTimeRange, setSelectedTimeRange] =
-    useState<string>('08:00 até 09:00');
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedStartTime, setSelectStartTime] = useState<string>('06:00 AM');
+  const [selectedEndTime, setSelectEndTime] = useState<string>('10:00 PM');
   const [selectedResources, setSelectedResources] = useState<{
     [key: string]: number;
   }>({});
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleResourcesChange = (resources: { [key: string]: number }) => {
     setSelectedResources(resources);
   };
 
   return (
-    <Card className="container mt-8">
+    <Card className="border rounded-none dark:bg-zinc-900">
+      <CardHeader>
+        <p className="text-xs text-gray-600 my-1">
+          Escolha o espaço, o horário...
+        </p>
+      </CardHeader>
       <CardContent>
-        {/* Título */}
-        <section className="my-4">
-          <h2 className="text-3xl font-semibold">Reserva um Espaço</h2>
-          <p className="text-xs text-gray-600 my-1">
-            Escolha o espaço, o horário...
-          </p>
-        </section>
-
         {/* Espaço */}
         <section className="my-4">
           <Label className="block text-base font-medium mb-1">
             Tipos de espaço
           </Label>
 
-          <Select>
+          <Select onValueChange={setselectedSpace} defaultValue={selectedSpace}>
             <SelectTrigger>
               <SelectValue placeholder="Escolha um espaço" />
             </SelectTrigger>
@@ -109,7 +87,11 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
         <section className="my-4">
           <Label className="block text-base font-medium mb-1">Categoria</Label>
 
-          <CategorySelector categories={categoryType} />
+          <CategorySelector
+            categories={categoryType}
+            selectedCategory={selectedCategory}
+            onSelectedCategory={setSelectedCategory}
+          />
 
           <p className="text-xs text-gray-600 mt-1">Descrição do Categoria</p>
         </section>
@@ -125,8 +107,10 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           <DateTimePicker
             selectedDate={selectedDate}
             onSelectDate={setSelectedDate}
-            selectedTimeRange={selectedTimeRange}
-            onSelectTimeRange={setSelectedTimeRange}
+            selectedStartTime={selectedStartTime}
+            onSelectStartTime={setSelectStartTime}
+            selectedEndTime={selectedEndTime}
+            onSelectEndTime={setSelectEndTime}
           />
 
           <p className="text-xs text-gray-600 mt-1">Descrição do horário</p>
@@ -139,7 +123,7 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
           <Label className="block text-base font-medium mb-1">Recursos</Label>
 
           <ResourceSelector
-            resources={mockResources}
+            resources={resources}
             onResourcesChange={handleResourcesChange}
           />
 
@@ -160,6 +144,11 @@ export default function SpacesForm({ spaces }: SpacesFormProps) {
             <p className="text-xs text-gray-600 mt-1">{selectedImage.name}</p>
           )}
         </section>
+        <FormError message={error} />
+        <FormSuccess message={success} />
+        <Button disabled={isPending} type="submit" className="w-full">
+          Fazer Agendamento
+        </Button>
       </CardContent>
     </Card>
   );

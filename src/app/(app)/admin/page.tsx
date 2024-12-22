@@ -6,7 +6,7 @@ import DataTable from '@/app/(app)/admin/components/admin-data-table';
 import { Booking, Space, User } from '@prisma/client';
 import { getAllBooking } from '@/data/booking';
 import { getUserById } from '@/data/user';
-import { getSpaceById } from '@/data/get-spaces';
+import { getSpaceById } from '@/data/space';
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -14,12 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const user = await currentUser();
-
-  if (user?.role !== 'ADMIN') {
-    redirect('/dashboard');
-  }
-
   const bookings = await getAllBooking();
 
   const data = await Promise.all(
@@ -40,5 +34,12 @@ export default async function AdminPage() {
       item !== undefined,
   );
 
-  return <DataTable data={filteredData} />;
+  return (
+    <div className="container">
+      <h2 className="text-3xl font-semibold flex items-center justify-center py-8">
+        Administração
+      </h2>
+      <DataTable data={filteredData} />
+    </div>
+  );
 }
