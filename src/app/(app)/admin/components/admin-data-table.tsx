@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -12,10 +11,7 @@ import {
   SortingState,
   getSortedRowModel,
 } from '@tanstack/react-table';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { ArrowUpDown } from 'lucide-react';
 
 import {
   Table,
@@ -27,6 +23,8 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { columns } from '@/app/(app)/admin/components/columns';
+import { BookingData } from '@/app/(app)/types';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,138 +33,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-interface Data {
-  name: string | null;
-  email: string | null;
-  user_image: string | null;
-  space: string;
-  capacity: number;
-  space_description: string | null;
-  startTime: Date | string;
-  endTime: Date | string;
-  booking_image: string | null;
-  category: 'PRESENTIAL_COURSE' | 'ONLINE_COURSE' | 'CONSULTANCY' | 'VIDEOS';
-  status: 'REQUESTED' | 'CONFIRMED' | 'CANCELLED';
-}
-
-const categoryTranslations: Record<string, string> = {
-  PRESENTIAL_COURSE: 'Curso Presencial',
-  ONLINE_COURSE: 'Curso Online',
-  CONSULTANCY: 'Consultoria',
-  VIDEOS: 'Vídeos',
-};
-
-const statusTranslations: Record<string, string> = {
-  REQUESTED: 'Em análise',
-  CONFIRMED: 'Aprovado',
-  CANCELLED: 'Cancelado',
-};
-
-export const columns: ColumnDef<Data>[] = [
-  {
-    accessorKey: 'name',
-    header: 'Nome',
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-
-    cell: ({ getValue }) => {
-      const value = getValue<string>();
-      return statusTranslations[value] || value;
-    },
-  },
-  {
-    accessorKey: 'space',
-    header: 'Espaço',
-  },
-  {
-    accessorKey: 'category',
-    header: 'Categoria',
-    cell: ({ getValue }) => {
-      const value = getValue<string>();
-      return categoryTranslations[value] || value;
-    },
-  },
-  {
-    accessorKey: 'timeRange',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Período do agendamento
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const startTime = row.original.startTime;
-      const endTime = row.original.endTime;
-
-      if (!startTime || !endTime) {
-        return '';
-      }
-
-      const formattedStart = format(new Date(startTime), 'dd/MM/yyyy HH:mm', {
-        locale: ptBR,
-      });
-      const formattedEnd = format(new Date(endTime), 'HH:mm', { locale: ptBR });
-
-      return `${formattedStart} - ${formattedEnd}`;
-    },
-    sortingFn: (rowA, rowB) => {
-      const startTimeA = new Date(rowA.original.startTime);
-      const startTimeB = new Date(rowB.original.startTime);
-
-      return startTimeA.getTime() - startTimeB.getTime();
-    },
-  },
-  {
-    id: 'actions',
-    header: 'Ações',
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Abrir ações</span>
-            <GiHamburgerMenu />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Ações</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Aprovar agendamento</DropdownMenuItem>
-          <DropdownMenuItem>Cancelar agendamento</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
-];
+import { cancelledBooking, confirmedBooking } from '@/actions/update-status';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { Booking } from '@prisma/client';
 
 interface DataTableProps {
-  data: Data[];
+  data: BookingData[];
 }
 
-export default function DataTable({ data }: DataTableProps) {
+export default function DataTable({ data: initialData }: DataTableProps) {
+  const user = useCurrentUser();
+
+  const [data, setData] = React.useState(initialData);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -187,10 +65,33 @@ export default function DataTable({ data }: DataTableProps) {
     },
   });
 
+  const updateBookingStatus = (updatedBooking: Booking) => {
+    setData((prevData) =>
+      prevData.map((item) => {
+        console.log('Item:', item);
+        console.log('UpdatedBooking:', updatedBooking);
+
+        return item.booking.id === updatedBooking.id
+          ? { ...item, booking: updatedBooking }
+          : item;
+      }),
+    );
+  };
+
+  const handleConfirmed = async (booking: Booking) => {
+    const updatedBooking = await confirmedBooking(user, booking.id);
+    updateBookingStatus(updatedBooking!);
+  };
+
+  const handleCancel = async (booking: Booking) => {
+    const updatedBooking = await cancelledBooking(user, booking.id);
+    updateBookingStatus(updatedBooking!);
+  };
+
   return (
-    <div className="flex w-full m-auto px-4 mt-8 gap-4">
+    <div className="flex max-h-screen w-full m-auto px-4 mt-8 gap-4">
       <div className="flex-auto">
-        <div className="border">
+        <div className="border dark:bg-zinc-900">
           <div className="flex items-center py-4 mx-4">
             <Input
               placeholder="Filtrar por email"
@@ -217,6 +118,7 @@ export default function DataTable({ data }: DataTableProps) {
                           )}
                     </TableHead>
                   ))}
+                  <TableHead>Ações</TableHead>
                 </TableRow>
               ))}
             </TableHeader>
@@ -232,12 +134,58 @@ export default function DataTable({ data }: DataTableProps) {
                         )}
                       </TableCell>
                     ))}
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Abrir ações</span>
+                            <GiHamburgerMenu />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
+                          {row.original.booking.status === 'REQUESTED' && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleConfirmed(row.original.booking)
+                                }
+                              >
+                                Aprovar agendamento
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleCancel(row.original.booking)
+                                }
+                              >
+                                Cancelar agendamento
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                          {row.original.booking.status === 'CONFIRMED' && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleCancel(row.original.booking)
+                                }
+                              >
+                                Cancelar agendamento
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columns.length + 1}
                     className="h-24 text-center"
                   >
                     Sem resultados
@@ -249,6 +197,7 @@ export default function DataTable({ data }: DataTableProps) {
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
           <Button
+            className="dark:bg-zinc-900"
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
@@ -257,6 +206,7 @@ export default function DataTable({ data }: DataTableProps) {
             Previous
           </Button>
           <Button
+            className="dark:bg-zinc-900"
             variant="outline"
             size="sm"
             onClick={() => table.nextPage()}

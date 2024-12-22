@@ -2,7 +2,8 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { currentUser } from '@/lib/auth';
-import DataTable from '@/components/admin-data-table';
+import DataTable from '@/app/(app)/admin/components/admin-data-table';
+import { Booking, Space, User } from '@prisma/client';
 import { getAllBooking } from '@/data/booking';
 import { getUserById } from '@/data/user';
 import { getSpaceById } from '@/data/get-spaces';
@@ -19,32 +20,25 @@ export default async function AdminPage() {
     redirect('/dashboard');
   }
 
-  let bookings = await getAllBooking();
-
-  if (bookings === null) redirect('/dashboard');
+  const bookings = await getAllBooking();
 
   const data = await Promise.all(
-    bookings.map(async (booking) => {
+    bookings!.map(async (booking) => {
       const user = await getUserById(booking.userId);
       const space = await getSpaceById(booking.spaceId);
 
-      if (user === null || space === null) redirect('/dashboard');
-
       return {
-        name: user.name,
-        email: user.email,
-        user_image: user.image,
-        space: space.name,
-        capacity: space.capacity,
-        space_description: space.description,
-        startTime: booking.startTime,
-        endTime: booking.endTime,
-        booking_image: booking.image,
-        category: booking.category,
-        status: booking.status,
+        booking,
+        user,
+        space,
       };
     }),
   );
 
-  return <DataTable data={data} />;
+  const filteredData = data.filter(
+    (item): item is { booking: Booking; user: User; space: Space } =>
+      item !== undefined,
+  );
+
+  return <DataTable data={filteredData} />;
 }
